@@ -32,7 +32,7 @@ def get_measured_data(file_path,start_index=0):
         content = f.readlines()
     content = [x.strip() for x in content]
     content = [ix.split('\t\t') for ix in content]
-    np_z = np.array([ix[0] for ix in content])
+    np_z = np.array([ix[0] for ix in content],dtype=float)
 
     np_dose = np.array([ix[1] for ix in content], dtype = float)
     return np_z, np_dose
@@ -54,13 +54,15 @@ print(np_sim_dist)
 # np_sim_dist =
 # print(np_sim_dict)
 np_sim_dist_clipped = [ix for ix in np_sim_dist if abs(ix) <82]
-np_sim_dose_clipped = np_sim_dose[np_sim_dist.index(np_sim_dist_clipped[0]):np_sim_dist.index(np_sim_dist_clipped[-1])]
+np_sim_dose_clipped = np_sim_dose[np_sim_dist.index(np_sim_dist_clipped[0]):np_sim_dist.index(np_sim_dist_clipped[-1])+1]
 
 print(np_sim_dist_clipped)
 print(np_sim_dose_clipped)
 print('MANGO')
 print(len(np_meas_dose))
 print(len(np_sim_dose_clipped))
+print(len(np_meas_dist))
+print(len(np_sim_dist_clipped))
 
 def calc_gamma(sim_dose,sim_dist, meas_dose,meas_dist):
 
@@ -74,6 +76,49 @@ def calc_gamma(sim_dose,sim_dist, meas_dose,meas_dist):
     gamma = [ix**(0.5) for ix in gamma]
 
     print(gamma)
+    print(len(gamma))
 
 
-# calc_gamma(np_sim_dose_clipped,np_sim_dist_clipped,np_meas_dose,np_meas_dist)
+
+def linear_interpolate(sim_dist,sim_dose,meas_dist):
+    print('ELEPHANT')
+    print(meas_dist)
+    new_sim_dose = []
+    new_sim_dist = []
+    for inx in meas_dist:
+        # print(sim_dist)
+        # print(meas_dist[inx])
+        temp = [ix-inx for ix in sim_dist]
+        # print(sim_dist)
+        # print(meas_dist)
+        # print(temp)
+        closest_inx = temp.index(min(temp))
+        a = sim_dose[closest_inx]
+        x = sim_dist[closest_inx]
+        if closest_inx +1 < len(sim_dose):
+            b = sim_dose[closest_inx+1]
+            y = sim_dist[closest_inx+1]
+        else:
+            b = sim_dose[-1]
+            y = sim_dist[-1]
+        slope = (b-a)/(y-x)
+        #
+        # print('YAYYAA')
+        # print(x,y,a,b)
+        # print(slope)
+        sim_interpolated_meas = inx*slope
+        new_sim_dose = new_sim_dose + [sim_interpolated_meas]
+        new_sim_dist = new_sim_dist + [inx]
+
+    new_sim_dist = np.around(new_sim_dist,decimals=2)
+    print(new_sim_dose)
+    print(len(new_sim_dose))
+    print(new_sim_dist)
+    print(len(new_sim_dist))
+    return new_sim_dist,new_sim_dose
+
+
+
+
+new_sim_dist,new_sim_dose = linear_interpolate(np_sim_dist_clipped,np_sim_dose_clipped,np_meas_dist)
+calc_gamma(new_sim_dose,new_sim_dist,np_meas_dose,np_meas_dist)
