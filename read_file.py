@@ -173,6 +173,7 @@ np_sim_dose_clipped = normalize_dose(np_sim_dose_clipped)
 
 # print(new_sim_dose)
 
+# def cal_log_error(np.):
 
 
 import matplotlib.pyplot as plt
