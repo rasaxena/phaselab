@@ -1,4 +1,5 @@
-# meshlab
-A library which supports edit, create, skeletonize, clean, smooth a 2d/3d mesh
+# phase lab
 
--------------construction in progress-----------------
+Fix phase space binary files using gradient descent optimization.
+
+----construction in progress--- next update on 21st Jan 2018
