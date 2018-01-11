@@ -1,22 +1,22 @@
 import numpy as np
 import helper_functions
 from scipy import stats
+import plot_and_calc_cost
 import stat
-np_energy = helper_functions.get_one_col_of_phsp("energy")
+
+# np_energy = helper_functions.get_one_col_of_phsp(file_path="/project/med/MAPDOSI/Rangoli.Saxena/pdd_sim", col_name="energy")
 # np_px = helper_functions.get_one_col_of_phsp("px")
 # np_py = helper_functions.get_one_col_of_phsp("py")
 # np_pz = helper_functions.get_one_col_of_phsp("pz")
 
 
-
-
-pnc = np.asarray(range(0,16))
-print(pnc)
-
 #retreiving data from txt files
-sim_dose , sim_dist = helper_functions.get_sim_data("../Lydia_txt", coord={'x':-1,'y':-1,'z':0}, clipped=True)
-meas_dose, meas_dist = helper_functions.get_measured_data('../MEAS_inplane_10x10_SSD100_depth16mm.txt')
+# sim_dose , sim_dist = helper_functions.get_sim_data("../Lydia_txt", coord={'x':-1,'y':-1,'z':0}, clipped=True)
+# meas_dose, meas_dist = helper_functions.get_measured_data('../MEAS_inplane_10x10_SSD100_depth16mm.txt')
 
+f_path_meas = "/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/pdd_meas/PDD_2x2_measurements.txt"
+
+sim_dist, sim_dose, meas_dist, meas_dose = plot_and_calc_cost.pdd_get_sim_meas_and_plot(folder='/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/pdd_sim/',f_path_meas=f_path_meas)
 #normalising dose
 sim_dose = helper_functions.normalize_dose(sim_dose)
 meas_dose = helper_functions.normalize_dose(meas_dose)
@@ -47,11 +47,11 @@ print(p_value)
 
 plt.scatter(sim_dist_lin,sim_dose_lin)
 plt.plot(sim_dist_lin,ablin_values)
-# plt.show()
+plt.show()
 print(sim_dose_lin,sim_dist_lin,meas_dose_lin,meas_dist_lin)
 
-
-nxt_possible_energy = np.subtract(np_energy,0.1)
-print(nxt_possible_energy)
-median = np.median(np_energy)
+#
+# nxt_possible_energy = np.subtract(np_energy,0.1)
+# print(nxt_possible_energy)
+# median = np.median(np_energy)
 
