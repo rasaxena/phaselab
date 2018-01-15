@@ -1,5 +1,7 @@
 import numpy as np
-import helper_functions
+
+from pdd_handler import helper_functions
+
 
 # <something>_cols is a dictionary which keys means the nth coloumn number and value denotes the index when the senseful data start
 
@@ -19,13 +21,13 @@ def pdd_get_sim_meas_and_plot(folder='None',IAEApart='3_', profile ='PDD_', vers
     meas_dose_all_fs = []
     meas_dist_all_fs = []
     #get simulation coloumns
-    sim1_cols = helper_functions.get_coloumns_from_txt(folder+IAEApart+profile+fs+version, cols={'1':3, '2':3, '3':3,'4':3})
-    sim2_cols = helper_functions.get_coloumns_from_txt(folder+IAEApart+profile+fs+version, cols={'1':3, '2':3, '3':3,'4':3})
-    sim3_cols = helper_functions.get_coloumns_from_txt(folder+IAEApart+profile+fs+version, cols={'1':3, '2':3, '3':3,'4':3})
-    sim4_cols = helper_functions.get_coloumns_from_txt(folder+IAEApart+profile+fs+version, cols={'1':3, '2':3, '3':3,'4':3})
+    sim1_cols = helper_functions.get_col_from_PDD_text(folder + IAEApart + profile + fs + version, cols={'1':3, '2':3, '3':3, '4':3})
+    sim2_cols = helper_functions.get_col_from_PDD_text(folder + IAEApart + profile + fs + version, cols={'1':3, '2':3, '3':3, '4':3})
+    sim3_cols = helper_functions.get_col_from_PDD_text(folder + IAEApart + profile + fs + version, cols={'1':3, '2':3, '3':3, '4':3})
+    sim4_cols = helper_functions.get_col_from_PDD_text(folder + IAEApart + profile + fs + version, cols={'1':3, '2':3, '3':3, '4':3})
 
     #get measurement coloumns
-    meas_dose,meas_dist = helper_functions.get_measured_data(f_path_meas + fs+ 'measurements.txt')
+    meas_dose,meas_dist = helper_functions.get_meas_PDD(f_path_meas + fs + 'measurements.txt')
 
     #get sim dist for all field sizes
     sim_dist = sim1_cols['np_2']
@@ -34,7 +36,8 @@ def pdd_get_sim_meas_and_plot(folder='None',IAEApart='3_', profile ='PDD_', vers
     #get sim dose for all field sizes and flip it
     sim_dose = np.flipud(np.array([sim1_cols['np_4'][ix]+sim2_cols['np_4'][ix]+
                                    sim3_cols['np_4'][ix]+ sim4_cols['np_4'][ix] for ix in range(len(sim4_cols['np_4']))]))
-    sim_dose_all_fs = np.array(sim_dose_all_fs + [helper_functions.normalize_dose(sim_dose, high=np.mean(sim_dose[14:18]))])
+    sim_dose_all_fs = np.array(sim_dose_all_fs + [
+        helper_functions.normalize_dose(sim_dose, high=np.mean(sim_dose[14:18]))])
 
     #get meas dist for all field sizes
     meas_dist_all_fs = np.array(meas_dist_all_fs + [meas_dist])
@@ -99,10 +102,6 @@ def calculate_total_cost(sim_dist=None,sim_dose=None,meas_dist=None,meas_dose=No
     return popt, poptm, diff
 folder='/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/pdd_sim/'
 f_path_meas = "/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/pdd_meas/PDD_"
-import time
-import datetime
-import pickle
-
 
 
 # save = open('save2x' ,'wb')
@@ -122,25 +121,22 @@ import pickle
     # save.close()
 
 
-def del_J_by_p(poptm,popt,p):
+def calc_G(poptm,popt,p):
 
 
     wiggling = np.linspace(popt[p],poptm[p], 100)
     del_p = wiggling[0]-wiggling[1]
     J =[]
-    # raise()
     for wiggled_param in wiggling:
         popt[p] = wiggled_param
         J = J + [calc_J(poptm,popt)]
-    G = [(J[ix+1] - J[ix])/wiggling[ix] for ix in range(len(J[:-1]))]
-        # raise()
-    # raise()
+    G = [(J[ix+1] - J[ix])/del_p for ix in range(len(J[:-1]))]
     # plt.scatter(wiggling, J, c = 'g')
     plt.scatter(wiggling[:-1],G)
     # J = np.sum(J)/9999
-    print(G)
-    plt.show()
 
+    plt.show()
+    print(G)
 
 
 
@@ -163,7 +159,7 @@ fs_list = ["2x_"]
 for ii, fs in enumerate(fs_list):
     popt, poptm, diff = calculate_total_cost(folder=folder, f_path_meas=f_path_meas, fs=fs, plot=False)
 
-    del_J_by_p(poptm,popt,4)
+    calc_G(poptm,popt,0)
     # print(calc_J(poptm, popt))
 
 

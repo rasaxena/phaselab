@@ -21,7 +21,7 @@ def change_bin_file(bin_path=None, val_pos=28,delta=0, dtype='float64'):
         with io.open(bin_path, "r+b") as f:
             noOfParticles = len(f.read())/60
             f.seek(0)
-            for i in range(10):
+            for i in range(noOfParticles):
                     # val_pos = 28 for energy
                     f.seek(val_pos+(i*60))
                     data = f.read(8)
@@ -35,4 +35,4 @@ def change_bin_file(bin_path=None, val_pos=28,delta=0, dtype='float64'):
                     # print (y)
             f.close()
         # print(ix)
-change_bin_file('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/PhaseSpace_0201.bin', delta=0.001)
+change_bin_file('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_0.bin', delta=0.00)

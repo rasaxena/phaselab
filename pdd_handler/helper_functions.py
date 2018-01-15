@@ -2,7 +2,7 @@ import numpy as np
 import h5py
 
 
-def get_one_col_of_phsp(file_path,col_name,start=0,stop=-1):
+def get_h5_phsp_col(file_path, col_name, start=0, stop=-1):
     """
     :param col_name: the name of the coloumn to retrieve eg: px or energy
     :param start: the offset index of the coloumn. default = 0
@@ -51,7 +51,7 @@ def calc_gamma_dose(sim_dose, sim_dist, meas_dose, meas_dist):
     # print(len(gamma))
     return gamma
 
-def get_coloumns_from_txt(file_path, cols=None):
+def get_col_from_PDD_text(file_path, cols=None):
 
     """
     used for PDD
@@ -73,7 +73,7 @@ def get_coloumns_from_txt(file_path, cols=None):
 
     return dict_content
 
-def get_measured_data(file_path, start_index=0):
+def get_meas_PDD(file_path, start_index=0):
     with open(file_path) as f:
         content = f.readlines()
     content = [x.strip() for x in content[start_index:]]
@@ -88,7 +88,7 @@ def normalize_dose(np_dose, high=None, low=0.0):
 
     :param np_dose: the dose
     :param high: highest dose after normalisation
-    :param low: lowest dose after normalisation
+    :param low: lowest dose after normalisation, unused for now
     :return: normalised dose
     """
     print(high)
@@ -97,10 +97,7 @@ def normalize_dose(np_dose, high=None, low=0.0):
         high = np.max(np_dose)
 
     return np_dose/high
-    # mins = np.min(np_dose, axis=0)
-    # maxs = np.max(np_dose, axis=0)
-    # rng = maxs - mins
-    # return high - (((high - low) * (maxs - np_dose)) / rng)
+
 
         # print(len(e))
 # print(np.asarray(e))
