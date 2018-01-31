@@ -2,6 +2,72 @@ import numpy as np
 import h5py
 
 
+
+
+def get_col_from_PDD_text(file_path, cols=None):
+
+    """
+    used for PDD
+    :param file_path: path to simulated file
+    :param coord: 1 is 1st col, 2 is 2nd..
+    :param clipped:clipped acc to dist
+    :return:all coloumns
+    """
+
+    dict_content = {}
+
+    with open(file_path) as f:
+        content = f.readlines()
+
+    content = [x.strip().split(",") for x in content]
+    for key, val in cols.iteritems():
+        if val != -1:
+            dict_content['np_' + key] = np.array([ix[int(key)-1] for ix in content[val:]], dtype=float)
+
+    return dict_content
+
+def get_meas_PDD(file_path, start_index=0):
+    with open(file_path) as f:
+        content = f.readlines()
+    content = [x.strip() for x in content[start_index:]]
+    content = [ix.split('\t') for ix in content]
+    np_z = np.array([ix[0] for ix in content[:-1]], dtype=float)
+    np_dose = np.array([ix[1] for ix in content[:-1]], dtype=float)
+    return np_dose,np_z
+
+def normalize_dose(np_dose, high=None, low=0.0):
+    """
+
+    :param np_dose: the dose
+    :param high: highest dose after normalisation
+    :param low: lowest dose after normalisation, unused for now
+    :return: normalised dose
+    """
+    print(high)
+
+    if high is None:
+        high = np.max(np_dose)
+
+    return np_dose/high
+
+import h5py
+def update_h5(h5_path, dataset, info_added):
+    """
+
+    :param h5_path: the path of the h5 file
+    :param dataset: the name of the dataset which needs to be updated
+    :param info_added: the new information which needs to be added
+    :return: nothing
+    """
+
+
+
+
+
+
+
+################################################################### UNUSED FUNCTIONS FOR NOW ###########################################################
+
 def get_h5_phsp_col(file_path, col_name, start=0, stop=-1):
     """
     :param col_name: the name of the coloumn to retrieve eg: px or energy
@@ -50,61 +116,3 @@ def calc_gamma_dose(sim_dose, sim_dist, meas_dose, meas_dist):
     gamma = [ix ** (0.5) for ix in gamma]
     # print(len(gamma))
     return gamma
-
-def get_col_from_PDD_text(file_path, cols=None):
-
-    """
-    used for PDD
-    :param file_path: path to simulated file
-    :param coord: 1 is 1st col, 2 is 2nd..
-    :param clipped:clipped acc to dist
-    :return:all coloumns
-    """
-
-    dict_content = {}
-
-    with open(file_path) as f:
-        content = f.readlines()
-
-    content = [x.strip().split(",") for x in content]
-    for key, val in cols.iteritems():
-        if val != -1:
-            dict_content['np_' + key] = np.array([ix[int(key)-1] for ix in content[val:]], dtype=float)
-
-    return dict_content
-
-def get_meas_PDD(file_path, start_index=0):
-    with open(file_path) as f:
-        content = f.readlines()
-    content = [x.strip() for x in content[start_index:]]
-    content = [ix.split('\t') for ix in content]
-    np_z = np.array([ix[0] for ix in content[:-1]], dtype=float)
-    # raise()
-    np_dose = np.array([ix[1] for ix in content[:-1]], dtype=float)
-    return np_dose,np_z
-
-def normalize_dose(np_dose, high=None, low=0.0):
-    """
-
-    :param np_dose: the dose
-    :param high: highest dose after normalisation
-    :param low: lowest dose after normalisation, unused for now
-    :return: normalised dose
-    """
-    print(high)
-
-    if high is None:
-        high = np.max(np_dose)
-
-    return np_dose/high
-
-
-        # print(len(e))
-# print(np.asarray(e))
-# import matplotlib.pyplot as plt
-# n_bins = 100000
-#
-# plt.hist(e, n_bins, histtype='step', stacked=False, fill=False)
-# plt.show()
-# print(e)
-# get_one_col_of_phsp("energy")

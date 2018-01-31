@@ -1,0 +1,25 @@
+
+
+fresh = True
+if fresh:
+    parent_PSF_path=None
+final_PSF_path = "/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_changed_PSF_0_wt_origHist_1.bin"
+
+
+#in mm
+min_rad = 0
+max_rad = 50
+
+# delta eg. 2 or -2
+energy_delta = 0.1
+
+#parameters needed for decoding pos means the byte position
+x_pos = 12
+x_dtype = 'float64'
+y_pos= 20
+y_dtype= 'float64'
+
+#variable to be changed
+var_pos = 36
+var_dtype = 'float64'
+
