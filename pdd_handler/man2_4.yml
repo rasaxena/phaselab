@@ -1,0 +1,24 @@
+bin_path:
+    fresh: True
+    parent: "/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_original/3_PSF_0_wt_origHist.bin"
+    final: "/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_0_2_3p0.bin"
+#    final : "/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_original/3_PSF_0_wt_origHist.bin"
+bin_info:
+    qty: ['type', 'wt', 'x' ,'y','z','energy','px','py','pz']
+    dtype: ['int8','float64','float64','float64','float64','float64','float64','float64','float64']
+    no_bytes: [4,8,8,8,8,8,8,8,8]
+
+locus:
+    shape: 'rad'
+    min_rad: 0
+    max_rad: 2
+    x_pos_inx: 2
+    y_pos_inx: 3
+    start_offset: None
+    size: None
+    step: 2
+    connecting_dots: None
+
+perturbation:
+    index: 5
+    delta: 3

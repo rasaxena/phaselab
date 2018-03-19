@@ -23,7 +23,7 @@ def pdd_get_sim_meas_and_plot(folder='None',IAEApart='3_', profile ='PDD_', vers
     meas_dist_all_fs = []
     #get simulation coloumns
 
-    sim1_cols = helper_functions.get_col_from_PDD_text('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/pdd_sim/3_PDD_m_0x01_20x_0.txt', cols={'1':3, '2':3, '3':3, '4':3})
+    sim1_cols = helper_functions.get_col_from_PDD_text(folder, cols={'1':3, '2':3, '3':3, '4':3})
 
     # sim1_cols = helper_functions.get_col_from_PDD_text(folder + IAEApart + profile + fs + version, cols={'1':3, '2':3, '3':3, '4':3})
     # sim2_cols = helper_functions.get_col_from_PDD_text(folder + IAEApart + profile + fs + version, cols={'1':3, '2':3, '3':3, '4':3})
@@ -45,7 +45,7 @@ def pdd_get_sim_meas_and_plot(folder='None',IAEApart='3_', profile ='PDD_', vers
 
     # print(sim1_cols)
     sim_dose = np.flipud(np.array(sim1_cols['np_4']))
-    sim_dose_all_fs =  helper_functions.normalize_dose(sim_dose, high=np.mean(sim_dose[14:18]))
+    sim_dose_all_fs =  helper_functions.normalize_dose(sim_dose, high=np.mean(sim_dose[15:18]))
 
     # raise()
 
@@ -64,7 +64,8 @@ def fit_exponential_curve(x, a, b,c):
 
 def fit_exponential_curve_2(x, a1, a2,b1,b2,c):
     # print("a1",a1,"a2",a2, "b1", b1, "b2",b2, "c",c)
-    return (a1**3.5) * np.exp(-1.5*b1 * x) - a2**0.5* np.exp(-2.5*b2 * x)+c*x
+    return (a1**3.0) * np.exp(-1.5*b1 * x) - a2**1.5* np.exp(-2.5*b2 * x)+c*x
+    return (a1) * np.exp(-b1 * x) - a2* np.exp(-b2 * x)
 
 from scipy import optimize
 
@@ -81,9 +82,6 @@ def get_popt_poptm_diff(sim_dist=None, sim_dose=None, meas_dist=None, meas_dose=
 
     sim_dist_all_fs, sim_dose_all_fs, meas_dist_all_fs, meas_dose_all_fs = pdd_get_sim_meas_and_plot(folder,f_path_meas =f_path_meas, fs=fs)
 
-
-
-
     index_of_max_sim_dose = np.where(sim_dose_all_fs[0] == np.max(sim_dose_all_fs[0]))
     index_of_max_meas_dose = np.where(meas_dose_all_fs[0] == np.max(meas_dose_all_fs[0]))
 
@@ -95,11 +93,11 @@ def get_popt_poptm_diff(sim_dist=None, sim_dose=None, meas_dist=None, meas_dose=
     # fit_curve_dist = np.array(sim_dist_all_fs[0][:index_of_max_dist[0][0]])
 
     print(index_of_max_dist[0])
-    fit_curve_dose = np.array(sim_dose_all_fs[:])
-    fit_curve_dist = np.array(sim_dist_all_fs[0][:])
+    fit_curve_dose = np.array(sim_dose_all_fs[2:300])
+    fit_curve_dist = np.array(sim_dist_all_fs[0][2:300])
 
-    fit_curve_dose_meas = np.array(meas_dose_all_fs[0][2:len(meas_dose_all_fs[0])])
-    fit_curve_dist_meas = np.array(meas_dist_all_fs[0][2:len(meas_dist_all_fs[0])])
+    fit_curve_dose_meas = np.array(meas_dose_all_fs[0][0:len(meas_dose_all_fs[0])])
+    fit_curve_dist_meas = np.array(meas_dist_all_fs[0][0:len(meas_dist_all_fs[0])])
 
     popt, pconv = optimize.curve_fit(fit_exponential_curve_2, fit_curve_dist, fit_curve_dose)
     poptm, pconvm = optimize.curve_fit(fit_exponential_curve_2, fit_curve_dist_meas, fit_curve_dose_meas)
@@ -110,6 +108,9 @@ def get_popt_poptm_diff(sim_dist=None, sim_dose=None, meas_dist=None, meas_dose=
         plot_curve(plt, fit_curve_dist_meas,fit_curve_dose_meas,'g',*poptm)
         plot_curve(plt, fit_curve_dist,fit_curve_dose,"r",*popt)
         # plt.fill_between()
+        plt.xlabel('Depth in Y')
+        plt.ylabel('Normalised Dose')
+        plt.title(folder)
     plt.show()
     print("POPT",popt)
     print("POPTM",poptm)
@@ -152,7 +153,7 @@ def calc_G(poptm,popt,p):
     plt.scatter(wiggling[:-1],G)
     # J = np.sum(J)/9999
 
-    plt.show()
+    # plt.show()
     print(G)
 
 
@@ -174,10 +175,11 @@ folder='/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/pdd_sim/'
 f_path_meas = "/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/pdd_meas/PDD_"
 
 
-fs_list = ["2x_"]
+fs_list = ["5x_"]
 for ii, fs in enumerate(fs_list):
-    popt, poptm, diff = get_popt_poptm_diff(folder=folder, f_path_meas=f_path_meas, fs=fs, plot=True)
-
+    popt, poptm, diff = get_popt_poptm_diff(folder='/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/Profiles_meas/Crossline/5x5_Measured_Cross.txt', f_path_meas=f_path_meas, fs=fs, plot=True)
+    popt, poptm, diff = get_popt_poptm_diff(folder='/home/knossos/garmnt/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/Profiles_Sim/profiles_v1.txt', f_path_meas=f_path_meas, fs=fs, plot=True)
+    #
     # calc_G(poptm,popt,0)
     # print(calc_J(poptm, popt))
 
@@ -186,3 +188,14 @@ for ii, fs in enumerate(fs_list):
 # (1.03567040^3.5) * exp(-1.5* 0.00439332405* x) -  0.72665992^0.5*exp(-2.5*0.0925965056 * x)+0.0000638067288*x
 # (1.03567040^3.5) * exp(-1.5* 0.00439332405* x) -  0.72665992^0.5*exp(-2.5*0.0925965056 * x)+0.0000638067288*x  - ((1.030830120^3.5) * exp(-1.5*0.00440850385* x) -
     # 0.783567450^0.5*exp(-2.5*0.103431740 * x)+0.0000492084402*x)
+
+# "/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/pdd_sim/pdd_4_6_exp3_3p0.txt
+# /project/med/MAPDOSI/Rangoli.Saxena/PSFMan/pdd_sim/pdd_6_8_exp3_3p0.txt
+# /project/med/MAPDOSI/Rangoli.Saxena/PSFMan/pdd_sim/pdd_10_15_mm_exp3_3p0.txt
+# /project/med/MAPDOSI/Rangoli.Saxena/PSFMan/pdd_sim/pdd_15_20_mm_exp3_3p0.txt
+# /project/med/MAPDOSI/Rangoli.Saxena/PSFMan/pdd_sim/pdd_4_6_mm_exp3_0p1.txt
+# /project/med/MAPDOSI/Rangoli.Saxena/PSFMan/pdd_sim/pdd_0_2_exp3_3p0.txt
+# /project/med/MAPDOSI/Rangoli.Saxena/PSFMan/pdd_sim/pdd_8_10_mm_exp3_0p1.txt
+# /project/med/MAPDOSI/Rangoli.Saxena/PSFMan/pdd_sim/pdd_6_8_mm_exp3_0p1.txt
+# /project/med/MAPDOSI/Rangoli.Saxena/PSFMan/pdd_sim/pdd_0_5_mm_exp3_3p0.txt
+# /project/med/MAPDOSI/Rangoli.Saxena/PSFMan/pdd_sim/pdd_2_4_mm_exp3_0p1.txt"

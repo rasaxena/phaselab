@@ -9,316 +9,441 @@ from matplotlib.colors import LogNorm
 # from fast_histogram import histogram1d, histogram2d
 
 
-def plot_histogram(bin_path, val_pos=1,dtype='float32'):
+def plot_histogram(bin_path, val_pos=36,dtype='float64'):
 
-    # energy = np.zeros((int(126491813/10),))
-    # x = np.zeros((int(126491813 / 10),))
-    # y = np.zeros((int(126491813 / 10),))
-    # energyp = np.zeros((int(126491813/10),))
-    # energym = np.zeros((47026533,))
-    with io.open('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_0.bin','rb') as f:
 
-        noOfParticles = len(f.read()) / 60
-        x = np.zeros((int(noOfParticles / 10),))
-        y = np.zeros((int(noOfParticles / 10),))
-        energy = np.zeros((int(noOfParticles / 10),))
-        print(noOfParticles)
+    with io.open('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_mom_v1.bin','rb') as f:
 
-        print(len(energy))
+        noOfParticles = len(f.read()) / 68
+        # # rad = np.zeros((int(noOfParticles/100),))
+        x = np.zeros((int(noOfParticles/10000),))
+        y = np.zeros((int(noOfParticles/10000),))
+        px = np.zeros((int(noOfParticles / 10000),))
+        py = np.zeros((int(noOfParticles / 10000),))
+        # pz = np.zeros((int(noOfParticles / 100),))
+        # r = np.zeros((int(noOfParticles / 100),))
+        # energy = np.zeros((int(noOfParticles/100),))
+        # print(noOfParticles)
+
+        # print(len(energy))
         f.seek(0)
-        for i in range(int(noOfParticles/10)):
+        for i in range(int(noOfParticles/10000)):
             # val_pos = 28 for energy
-            f.seek(28 + (i * 60))
-            # data = f.read(8)
-            # xi = np.frombuffer(data, dtype=dtype, offset=0, count=1)
-            # data = f.read(8)
-            # yi = np.frombuffer(data, dtype=dtype, offset=0, count=1)
-            # data = f.read(8)
-            # zi = np.frombuffer(data, dtype=dtype, offset=0, count=1)
-            data = f.read(8)
-            energyi = np.frombuffer(data, dtype="float64", offset=0, count=1)
-            energy[i] = energyi
-            # x[i] = xi
-            # y[i] = yi
-    print("energy",energy[:10])
-
-
-
-
-
-
-    with io.open(bin_path, 'rb') as f:
-        noOfParticles = len(f.read()) / 33
-        x = np.zeros((int(noOfParticles / 10),))
-        y = np.zeros((int(noOfParticles / 10),))
-        energy10 = np.zeros((int(noOfParticles / 10),))
-        print(noOfParticles)
-
-
-
-        print(len(energy))
-        f.seek(0)
-        for i in range(int(noOfParticles/10)):
-            # val_pos = 28 for energy
-            f.seek(val_pos + (i * 33))
+            f.seek(0 + (i * 68))
             data = f.read(4)
-            # xi = np.frombuffer(data, dtype=dtype, offset=0, count=1)
-            # data = f.read(8)
-            # yi = np.frombuffer(data, dtype=dtype, offset=0, count=1)
-            # data = f.read(8)
+            type= np.frombuffer(data, dtype='int8', offset=0, count=1)
+            data = f.read(8)
+            weight= np.frombuffer(data, dtype='float64', offset=0, count=1)
+            data = f.read(8)
+            xi = np.frombuffer(data, dtype='float64', offset=0, count=1)
+            data = f.read(8)
+            yi = np.frombuffer(data, dtype='float64', offset=0, count=1)
+            data = f.read(8)
+            zi = np.frombuffer(data, dtype='float64', offset=0, count=1)
+            data = f.read(8)
+            energyi = np.frombuffer(data, dtype='float64', offset=0, count=1)
+            data = f.read(8)
+            pxi = np.frombuffer(data, dtype='float64', offset=0, count=1)
+            data = f.read(8)
+            pyi = np.frombuffer(data, dtype='float64', offset=0, count=1)
+            data = f.read(8)
+            pzi = np.frombuffer(data, dtype='float64', offset=0, count=1)
             # zi = np.frombuffer(data, dtype=dtype, offset=0, count=1)
+            # f.seek(36 + (i * 68))
             # data = f.read(8)
-            energyi = np.frombuffer(data, dtype=dtype, offset=0, count=1)
-            energy10[i] = abs(energyi)
-            # x[i] = xi
-            # y[i] = yi
-    print("energy",energy[:10])
-    # print("x",x[:10])
-    # print("y",y[:10])
+            # energyi = np.frombuffer(data, dtype="float64", offset=0, count=1)
+            # energy[i] = energyi
+            # rad[i] = np.sqrt(((xi*10)**2 + (yi*10)**2))
+            px[i] = pxi
+            py[i] = pyi
+            # pz[i] = pzi
+            y[i] = yi
+            x[i] = xi
+            # energy[i] = energyi
+            #
+            # print('type :', type)
+            # print('wt :', weight)
+            #
+            # print('x :', xi)
+            #
+            # print('y :', yi)
+            #
+            # print('z :', zi)
+            #
+            # print('energy :', energyi)
+            #
+            # print('px :', pxi)
+            # print('py :', pyi)
+            #
+            # print('pz :', pzi)
 
-    # plt.hist(energy, 1000)
-    # plt.show()
 
 
-    # with io.open('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_IAEA_PSF_p_0x10_0.bin','rb') as f:
-    #     noOfParticles = len(f.read()) / 33
+    # print("energy",energy[:10])
+
+    # with io.open('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_0_2_3p0.bin', 'rb') as f:
+    # #
+    #     noOfParticles = len(f.read()) / 68
+    #     # rad = np.zeros((int(noOfParticles/100),))
+    #     # y = np.zeros((int(noOfParticles / 100),))
+    #     energy2 = np.zeros((int(noOfParticles / 1000),))
     #     print(noOfParticles)
-    #     # energyp = np.zeros((int(noOfParticles/2),))
-    #     print(len(energyp))
-    #     f.seek(0)
-    #     for i in range(int(noOfParticles/10)):
-    #         # val_pos = 28 for energy
-    #         f.seek(val_pos + (i * 33))
-    #         data = f.read(4)
-    #         y = np.frombuffer(data, dtype='float32', offset=0, count=1)
-    #         energyp[i] = y
-    # print(energyp[:10])
-
-    # with io.open('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_m_0x01_0.bin','rb') as f:
-    #     noOfParticles = len(f.read()) / 60
-    #     print(noOfParticles)
-    #     # energym = np.zeros((int(noOfParticles/2),))
-    #     print(len(energym))
-    #     f.seek(0)
-    #     for i in range(int(noOfParticles/2)):
-    #         # val_pos = 28 for energy
-    #         f.seek(val_pos + (i * 60))
-    #         data = f.read(8)
-    #         y = np.frombuffer(data, dtype=dtype, offset=0, count=1)
-    #         energym[i] = y
-    # print(energym[:10])
-    bins = np.linspace(0, 11, 1000)
     #
-    plt.hist(energy, bins, alpha=0.3, label='5.75 Mev')
-    plt.hist(energy10, bins, alpha=0.3, label='10 Mev')
+    #     # print(len(energy))
+    #     f.seek(0)
+    #     for i in range(int(noOfParticles/1000)):
+    #         # val_pos = 28 for energy
+    #         # f.seek(12 + (i * 68))
+    #         # data = f.read(8)
+    #         # xi = np.frombuffer(data, dtype=dtype, offset=0, count=1)
+    #         # data = f.read(8)
+    #         # yi = np.frombuffer(data, dtype=dtype, offset=0, count=1)
+    #         # data = f.read(8)
+    #         # zi = np.frombuffer(data, dtype=dtype, offset=0, count=1)
+    #         f.seek(36 + (i * 68))
+    #         data = f.read(8)
+    #         energyi = np.frombuffer(data, dtype="float64", offset=0, count=1)
+    #         energy2[i] = energyi
+            # rad[i] = np.sqrt(((xi*10)**2 + (yi*10)**2))
 
-    # plt.hist2d(y, energy, bins=400, norm=LogNorm())
+    # bins = np.linspace(0, 10, 100)
+    #
+    # plt.hist(rad, bins, alpha=1)
+    # plt.xlabel('radius in mm')
+    # plt.ylabel('number of particles')
+    # plt.hist(energy2, bins, alpha=0.3, label='manipulated Mev')
+
+    # if energy.any() == energy10.any():
+    #     print ('what the hell')
+    # print(x[:10], y[:10], px[:10], py[:10], pz[:10], energy[:10])
+    #
+    # plt.hist2d(x, y, bins=400, norm=LogNorm())
     # plt.colorbar()
     # plt.show()
-    # plt.hist(energym, bins, alpha = 0.3, label = 'minus 0.01')
+    # # plt.hist(energy, bins, alpha = 0.3, label = 'original')
     # plt.legend(loc='upper right')
+    # plt.title('Cropped Phase Space histogram')
+    # plt.xlabel('x direction')
+    # # plt-ylabel('y direction')
+    # plt.show()
+
+
+    import matplotlib.pyplot as plt
+
+    n = int(noOfParticles/10000)
+    X =x
+    Y=y
+    U=px
+    V=py
+    # X, Y = np.mgrid[0:n, 0:n]
+    T = np.arctan2(Y - n / 2., X - n / 2.)
+    R = 10 + np.sqrt((Y - n / 2.0) ** 2 + (X - n / 2.0) ** 2)
+    # U, V = R * np.cos(T), R * np.sin(T)
+
+    # plt.axes([0.025, 0.025, 0.95, 0.95])
+    plt.quiver(X, Y, U, V, R, alpha=.5)
+    plt.quiver(X, Y, U, V, edgecolor='k', facecolor='None', linewidth=.3)
+    axes = plt.gca()
+    axes.set_xlim([-10, 10])
+    axes.set_ylim([-10, 10])
+    # plt.xlim(-5, n)
+    plt.xticks(())
+    # plt.ylim(-5, n)
+    plt.yticks(())
+    plt.axes().set_aspect('equal', 'datalim')
+
     plt.show()
 
-# plot_histogram('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_0.bin')
-# plot_histogram('/home/r/Rangoli.Saxena/Downloads/ELEKTA_PRECISE_10mv_part1.IAEAphsp')
+# plot_histogram('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_original/3_PSF_0_wt_origHist.bin')
 
-def manipulate_PSF(bin_path=None, val_pos=12,delta=0, dtype='float64',min=None, max=None, fresh=False, IAEA=False):
+def manipulate_PSF(bin_path=None, bin_info=None, locus=None, perturbation=None, min_rad=0, max_rad=2, delta=0):
 
     """
-    :param bin_path: path for the binary file
-    :param val_pos: byte position of the value to be changed
-    :param delta: change in value. (/always added. In case of subtraction, send negative)
-    :param dtype: dtype of the value to be read.
+    More info in the man.yaml example
+    :param bin_path: a dict, paths for the binary file.
+    :param bin_info: byte positions and datatypes
+    :param locus: the location of change
+    :param perturbation: delta added
     :return: nothing. makes the changes in the binary file and saves it in the same position
     """
 
-    if bin_path == None:
-        print("Need binary File path. Given None")
-        raise ValueError
+    fresh = bin_path['fresh']
+    src = bin_path['parent']
+    final = bin_path['final']
+    name = delta*10
+    name = str(delta).replace(".", "p")
+    # final = "/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_" + str(min_rad) + "_" + str(max_rad) + "_mm__" + str(name) +".bin"
+    # delta = perturbation['delta']
+    index = perturbation['index']
+
+    qty = bin_info['qty']
+    dtype = bin_info['dtype']
+    no_bytes = bin_info['no_bytes']
+
+    shape = locus['shape']
+
+    if shape == 'rad':
+        # min_rad = locus['min_rad']
+        # max_rad = locus['max_rad']
+        x_pos_inx = locus['x_pos_inx']
+        y_pos_inx = locus['y_pos_inx']
+    elif shape == 'sq':
+        #TODO
+        pass
+    elif shape == 'rand':
+        #TODO
+        pass
+
+    bytes_per_line = np.sum(no_bytes)
+
+    assert bin_path is not None
+    assert shape is not None
+    assert final is not None
+
+    val_pos = np.sum(no_bytes[:index])
+    print("bin_path : ", final)
 
     if fresh and delta !=0:
-        src = '/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_original/3_PSF_0_wt_origHist.bin'
-        dst = bin_path
-        copyfile(src,dst)
+        copyfile(src,final)
 
-    with io.open(bin_path, "r+b") as f:
-        noOfParticles = len(f.read()) / 68
-        print(noOfParticles)
+    with io.open(final, "r+b") as f:
+
+        no_of_part = len(f.read()) / bytes_per_line
+        print(no_of_part)
         print("---------------" + str(val_pos))
         f.seek(0)
 
         changed_particles =0
 
-        for i in range(noOfParticles):
-            f.seek(val_pos + (i * 68))
-            data = f.read(8)
-            x = np.frombuffer(data, dtype=dtype, offset=0, count=1)
-            data = f.read(8)
-            y = np.frombuffer(data, dtype=dtype, offset=0, count=1)
-            f.seek(36 + (i * 68))
-            energy = f.read(8)
-            energy = np.frombuffer(energy, dtype="float64", offset=0, count=1)
-            ev_energy = int(energy * 100000)
-            if ev_energy != 51100 and (min**2) <= ((x*10)**2 + (y*10)**2) <(max**2):
-                new_energy = abs(energy) + delta
-                f.seek(36 + (i * 68))
-                f.write(np.getbuffer(new_energy))
-                changed_particles += 1
-                if i < 1000:
-                    print("new energy", new_energy)
+        if shape == 'rad':
+            for i in range(no_of_part):
+                # f.seek(np.sum(no_bytes[:x_pos_inx]) + (i * bytes_per_line))
+                # data = f.read(no_bytes[x_pos_inx])
+                # x = np.frombuffer(data, dtype=dtype[x_pos_inx], offset=0, count=1)
+                #
+                # f.seek(np.sum(no_bytes[:y_pos_inx]) + (i * bytes_per_line))
+                # data = f.read(no_bytes[y_pos_inx])
+                # y = np.frombuffer(data, dtype=dtype[y_pos_inx], offset=0, count=1)
 
-            if i < 1000:
-                print("x...",x)
-                print("y....",y)
-                print("old energy" , energy)
+                f.seek(np.sum(no_bytes[:index]) + (i * bytes_per_line))
+                energy = f.read(no_bytes[index])
+                energy = np.frombuffer(energy, dtype=dtype[index], offset=0, count=1)
+                ev_energy = int(energy * 100000)
+
+                # if x <= max_rad*0.1 and y <= max_rad*0.1:
+                # if ev_energy != 51100 and (min_rad**2) <= ((x*10)**2 + (y*10)**2) <(max_rad**2):
+                if ev_energy != 51100:
+                    # print("old energy" , energy)
+                    new_energy = abs(energy) + delta
+                    f.seek(36 + (i * bytes_per_line))
+                    f.write(np.getbuffer(new_energy))
+                    # print(x)
+                    # print(y)
+                    # print("new energy", new_energy)
+                    changed_particles += 1
+
         f.close()
-        print("-----------# of changed particle, .....", changed_particles)
-
-manipulate_PSF('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_wt_0_2_0p10_0.bin', delta=0.1, min = 0 , max = 2, fresh=True, IAEA=False)
-manipulate_PSF('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_wt_2_4_0p10_0.bin', delta=0.1, min = 2 , max = 4, fresh=True, IAEA=False)
-manipulate_PSF('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_wt_4_6_0p10_0.bin', delta=0.1, min = 4 , max = 6, fresh=True, IAEA=False)
-manipulate_PSF('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_wt_6_8_0p10_0.bin', delta=0.1, min = 6 , max = 8, fresh=True, IAEA=False)
-manipulate_PSF('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_wt_8_10_0p10_0.bin', delta=0.1, min = 8 , max = 10, fresh=True, IAEA=False)
-manipulate_PSF('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_wt_10_12_0p10_0.bin', delta=0.1, min = 10 , max = 12, fresh=True, IAEA=False)
-manipulate_PSF('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_wt_12_14_0p10_0.bin', delta=0.1, min = 12 , max = 14, fresh=True, IAEA=False)
-manipulate_PSF('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_wt_14_16_0p10_0.bin', delta=0.1, min = 14 , max = 16, fresh=True, IAEA=False)
-manipulate_PSF('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_wt_16_18_0p10_0.bin', delta=0.1, min = 16 , max = 18, fresh=True, IAEA=False)
-manipulate_PSF('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_wt_18_20_0p10_0.bin', delta=0.1, min = 18 , max = 20, fresh=True, IAEA=False)
-manipulate_PSF('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_wt_20_22_0p10_0.bin', delta=0.1, min = 20 , max = 22, fresh=True, IAEA=False)
-manipulate_PSF('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_wt_2_4_0p10_0.bin', delta=0.1, min = 0 , max = 2, fresh=True, IAEA=False)
+        print("----------- # of changed particles, .....", changed_particles)
 
 
-
-def manipulate_PSF_energy(bin_path=None, val_pos=0, delta=0, dtype='float64', fresh=False, IAEA=False):
+def read_PSF(bin_path=None):
 
     """
-    :param bin_path: path for the binary file
-    :param val_pos: byte position of the value to be changed
-    :param delta: change in value. (/always added. In case of subtraction, send negative)
-    :param dtype: dtype of the value to be read.
+    More info in the man.yaml example
+    :param bin_path: a dict, paths for the binary file.
+    :param bin_info: byte positions and datatypes
+    :param locus: the location of change
+    :param perturbation: delta added
     :return: nothing. makes the changes in the binary file and saves it in the same position
     """
     if bin_path == None:
         print("Need binary File path. Given None")
         raise ValueError
 
-    if fresh and delta != 0:
-        src = '/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/1_IAEA_PSF_0.bin'
-        dst = bin_path
-        copyfile(src, dst)
-        # bin_path = fresh
-
-    # if IAEA:
+    min_rad = 2
+    max_rad =4
     with io.open(bin_path, "rb") as f:
         noOfParticles = len(f.read()) / 68
         print(noOfParticles)
+        f.seek(0)
+
+        changed_particles = 0
+
+        for i in range(1000):
+            f.seek(12 + (i*68))
+            data = f.read(8)
+            x = np.frombuffer(data, dtype="float64", offset=0, count=1)
+
+            f.seek(20 + (i * 68))
+            data = f.read(8)
+
+            y = np.frombuffer(data, dtype="float64", offset=0, count=1)
+
+            f.seek(36 + (i * 68))
+            energy = f.read(8)
+            energy = np.frombuffer(energy, dtype="float64", offset=0, count=1)
+
+
+            ev_energy = int(energy * 100000)
+            if ev_energy != 51100 and (min_rad ** 2) <= ((x * 10) ** 2 + (y * 10) ** 2) < (max_rad ** 2):
+                print("x : ", x)
+                print("y : ", y)
+                print("old energy : ", energy)
+        #     if ev_energy != 51100 and (0 ** 2) <= ((x * 10) ** 2 + (y * 10) ** 2) < (2 ** 2):
+                changed_particles += 1
+        f.close()
+        print("-----------# of changed particle, .....", changed_particles)
+
+# read_PSF("/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/cropped_0p2.bin")
+# read_PSF("/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_original/cropped_phasespace.bin")
+
+def manipulate_PSF_mom(bin_path=None, bin_info=None, locus=None, perturbation=None, min_rad=0, max_rad=2, delta=0):
+
+    """
+    More info in the man.yaml example
+    :param bin_path: a dict, paths for the binary file.
+    :param bin_info: byte positions and datatypes
+    :param locus: the location of change
+    :param perturbation: delta added
+    :return: nothing. makes the changes in the binary file and saves it in the same position
+    """
+
+    fresh = bin_path['fresh']
+    src = bin_path['parent']
+    final = bin_path['final']
+    name = delta*10
+    name = str(delta).replace(".", "p")
+    # final = "/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_" + str(min_rad) + "_" + str(max_rad) + "_mm__" + str(name) +".bin"
+    # delta = perturbation['delta']
+    index = perturbation['index']
+
+    qty = bin_info['qty']
+    dtype = bin_info['dtype']
+    no_bytes = bin_info['no_bytes']
+
+    shape = locus['shape']
+
+    if shape == 'rad':
+        # min_rad = locus['min_rad']
+        # max_rad = locus['max_rad']
+        x_pos_inx = locus['x_pos_inx']
+        y_pos_inx = locus['y_pos_inx']
+    elif shape == 'sq':
+        #TODO
+        pass
+    elif shape == 'rand':
+        #TODO
+        pass
+
+    bytes_per_line = np.sum(no_bytes)
+
+    assert bin_path is not None
+    assert shape is not None
+    assert final is not None
+
+    val_pos = np.sum(no_bytes[:index])
+    print("bin_path : ", final)
+
+    if fresh and delta !=0:
+        copyfile(src,final)
+
+    with io.open(final, "r+b") as f:
+
+        no_of_part = len(f.read()) / bytes_per_line
+        print(no_of_part)
         print("---------------" + str(val_pos))
         f.seek(0)
-        # energy = np.zeros((noOfParticles/10,))
 
-        for i in [31580640,31580641,31580642,31580643,31580644,31580645,31580646,31580647,31580648,31580649,31580650]:
+        changed_particles =0
 
-            print("STARTING PRINTING FOR PARTICLE: " ,i )
-            f.seek(val_pos + (i * 68))
-            data = f.read(4)
-            y = np.frombuffer(data, dtype='int8', offset=0, count=1)
-            print('type....', y)
-            data = f.read(8)
-            y = np.frombuffer(data, dtype=dtype, offset=0, count=1)
-            print('wt....', y)
-            data = f.read(8)
-            y = np.frombuffer(data, dtype=dtype, offset=0, count=1)
-            print('x....', y)
-            data = f.read(8)
-            y = np.frombuffer(data, dtype=dtype, offset=0, count=1)
-            print('y....', y)
-            data = f.read(8)
-            y = np.frombuffer(data, dtype=dtype, offset=0, count=1)
-            print('z....', y)
-            data = f.read(8)
-            y = np.frombuffer(data, dtype=dtype, offset=0, count=1)
-            print('energy....', y)
-            data = f.read(8)
-            y = np.frombuffer(data, dtype=dtype, offset=0, count=1)
-            print('px....', y)
-            data = f.read(8)
-            y = np.frombuffer(data, dtype=dtype, offset=0, count=1)
-            print('py....', y)
-            data = f.read(8)
-            y = np.frombuffer(data, dtype=dtype, offset=0, count=1)
-            print('pz....', y)
+        if shape == 'rad':
+            for i in range(no_of_part):
+                f.seek(np.sum(no_bytes[:x_pos_inx]) + (i * bytes_per_line))
+                data = f.read(no_bytes[x_pos_inx])
+                x = np.frombuffer(data, dtype=dtype[x_pos_inx], offset=0, count=1)
 
-        print("----------- particle done")
-            # print(x)
-            # print(new_y)
+                f.seek(np.sum(no_bytes[:y_pos_inx]) + (i * bytes_per_line))
+                data = f.read(no_bytes[y_pos_inx])
+                y = np.frombuffer(data, dtype=dtype[y_pos_inx], offset=0, count=1)
 
-    # else:
-    #     with io.open(bin_path, "r+b") as f:
-    #         noOfParticles = len(f.read()) / 60
-    #         f.seek(0)
-    #         print(noOfParticles)
-    #         characterRad = {}
-    #         for i in range(10):
-    #             # val_pos = 28 for energy
-    #             f.seek(val_pos + (i * 60))
-    #             data = f.read(8)
-    #             y = np.frombuffer(data, dtype=dtype, offset=0, count=1)
-    #
-    #             x = int(y * 100000)
-    #             if i % 2 == 0 and x != 51100 and (y + delta) > 0 and delta != 0:
-    #                 y = y + delta
-    #                 f.seek(val_pos + (i * 60))
-    #                 f.write(np.getbuffer(y))
-    #                 # print (y)
-    #         f.close()
-    #         print("-----------")
+                yn = (y/2)*0.9
+                #
+                # f.seek(np.sum(no_bytes[:index]) + (i * bytes_per_line))
+                # energy = f.read(no_bytes[index])
+                # energy = np.frombuffer(energy, dtype=dtype[index], offset=0, count=1)
+                # ev_energy = int(energy * 100000)
+
+                # if x <= max_rad*0.1 and y <= max_rad*0.1:
+                # if ev_energy != 51100 and (min_rad**2) <= ((x*10)**2 + (y*10)**2) <(max_rad**2):
+                # if ev_energy != 51100:
+                #     print("old energy" , energy)
+                # new_energy = abs(energy) + delta
+                f.seek(20 + (i * bytes_per_line))
+                f.write(np.getbuffer(yn))
+                # print(x)
+                # print(y)
+                # print("new energy", new_energy)
+                # changed_particles += 1
+
+        f.close()
+        print("----------- # of changed particles, .....")
 
 
-        # print(ix)
-# manipulate_PSF_energy('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_original/3_PSF_0_wt_origHist.bin', delta=0.0, fresh=False, IAEA=False)
-# manipulate_PSF('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_m_0x05_0.bin', delta=0.0, fresh=False)
-# manipulate_PSF('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_p_0x05_0.bin', delta=0.05, fresh=True)
-# manipulate_PSF('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_p_0x15_0.bin', delta=0.15, fresh=True)
-# manipulate_PSF('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_m_0x05_0.bin', delta=-0.05, fresh=True)
+def crop_PSF(bin_path=None, bin_info=None, locus=None, perturbation=None, min_rad=0, max_rad=2, delta=0):
 
-
-# manipulate_PSF('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_p_0x01_0.bin', delta=0.01, fresh=True)
-# manipulate_PSF('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_p_0x02_0.bin', delta=0.02, fresh=False)
-# manipulate_PSF('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_p_0x03_0.bin', delta=0.03, fresh=False)
-# manipulate_PSF('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_m_0x01_0.bin', delta=-0.01, fresh=False)
-# manipulate_PSF('/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_m_0x02_0.bin', delta=-0.02, fresh=False)
+    """
+    More info in the man.yaml example
+    :param bin_path: a dict, paths for the binary file.
+    :param bin_info: byte positions and datatypes
+    :param locus: the location of change
+    :param perturbation: delta added
+    :return: nothing. makes the changes in the binary file and saves it in the same position
+    """
 
 
 
-# manipulate_PSF("/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/1_IAEA_PSF_0.bin",delta=0.01, fresh=True, IAEA=True, val_pos=1)
-
-# manipulate_PSF("/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/1_IAEA_PSF_p_0x05_0.bin",delta=0.05, fresh=True, IAEA=True, val_pos=1)
-# manipulate_PSF("/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/1_IAEA_PSF_p_0x15_0.bin",delta=0.15, fresh=True, IAEA=True, val_pos=1)
-# manipulate_PSF("/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/1_IAEA_PSF_m_0x05_0.bin",delta=-0.05, fresh=True, IAEA=True, val_pos=1)
-# manipulate_PSF("/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/1_IAEA_PSF_m_0x10_0.bin",delta=-0.10, fresh=True, IAEA=True, val_pos=1)
-# manipulate_PSF("/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/1_IAEA_PSF_p_0x01_0.bin",delta=0.01, fresh=True, IAEA=True, val_pos=1)
-# manipulate_PSF("/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/1_IAEA_PSF_p_0x02_0.bin",delta=0.02, fresh=True, IAEA=True, val_pos=1)
-# manipulate_PSF("/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/1_IAEA_PSF_p_0x03_0.bin",delta=0.03, fresh=True, IAEA=True, val_pos=1)
-# manipulate_PSF("/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/1_IAEA_PSF_m_0x01_0.bin",delta=-0.01, fresh=True, IAEA=True, val_pos=1)
-# manipulate_PSF("/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/1_IAEA_PSF_m_0x02_0.bin",delta=-0.02, fresh=True, IAEA=True, val_pos=1)
+    with io.open("/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_original/3_PSF_0_wt_origHist.bin", "rb") as f:
 
 
+        no_of_part = len(f.read()) / 68
+        print(no_of_part)
+        # print("---------------" + str(val_pos))
+        f.seek(0)
 
-def copying_and_creating_new_version_phsp(version):
-    src = "/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_"+ str(version)+".bin"
-    version = version +1
-    dst = "/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_"+ str(version)+".bin"
-    copyfile(src, dst)
+        changed_particles =0
 
-# copying_and_creating_new_version_phsp(9)
-#
-# src = '/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_0.bin'
-# #
-# # dst = '/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_p_0x02_0.bin'
-# # # copyfile(src, dst)
-# dst = '/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_p_0x10_0.bin'
-# copyfile(src, dst)
-# dst = '/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_m_0x10_0.bin'
-# copyfile(src, dst)
-# dst = '/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_m_0x02_0.bin'
-# # copyfi1le(src, dst)
+        with io.open("/project/med/MAPDOSI/Rangoli.Saxena/PSFMan/PhSp_bin/3_PSF_cropped_ellipse_1y1.bin", "wb") as fx:
+            # if shape == 'rad':
+            for i in range(no_of_part):
+                # f.seek(np.sum(no_bytes[:x_pos_inx]) + (i * bytes_per_line))
+                # data = f.read(no_bytes[x_pos_inx])
+                # x = np.frombuffer(data, dtype=dtype[x_pos_inx], offset=0, count=1)
+
+                f.seek(20 + (i * 68))
+                data = f.read(8)
+                y = np.frombuffer(data, dtype="float64", offset=0, count=1)
+                #
+                # f.seek(np.sum(no_bytes[:index]) + (i * bytes_per_line))
+                # energy = f.read(no_bytes[index])
+                # energy = np.frombuffer(energy, dtype=dtype[index], offset=0, count=1)
+                # ev_energy = int(energy * 100000)
+
+                if -1 <= y*10 <= 1:
+                # if ev_energy != 51100 and (min_rad**2) <= ((x*10)**2 + (y*10)**2) <(max_rad**2):
+                # if ev_energy != 51100:
+                    # print("old energy" , energy)
+                    # new_energy = abs(energy) + delta
+                    f.seek(i * 68)
+                    data = f.read(68)
+                    fx.write(np.getbuffer(data))
+                    # print(x)
+                    # print(y)
+                    # print("new energy", new_energy)
+                    changed_particles += 1
+
+        f.close()
+        fx.close()
+        print("----------- # of changed particles, .....", changed_particles)
+
+
+crop_PSF('mm')
